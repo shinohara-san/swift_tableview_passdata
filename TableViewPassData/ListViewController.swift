@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ListViewController.swift
 //  TableViewPassData
 //
 //  Created by Yuki Shinohara on 2020/09/06.
@@ -8,12 +8,7 @@
 
 import UIKit
 
-struct Category {
-    var title: String
-    var items: [String]
-}
-
-class ViewController: UIViewController {
+class ListViewController: UIViewController {
     
     private let tableView: UITableView = {
         let table = UITableView()
@@ -21,47 +16,47 @@ class ViewController: UIViewController {
         return table
     }()
     
-    private var data = [
-        Category(title: "関東", items: ["東京", "神奈川", "千葉"]),
-        Category(title: "近畿", items: ["大阪", "奈良", "京都"]),
-        Category(title: "九州", items: ["福岡", "佐賀", "長崎", "熊本", "鹿児島", "宮崎", "沖縄"])
-    ]
+    private var items: [String]
+    
+    init(items: [String]) {
+        self.items = items
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
+        view.addSubview(tableView)
+        // Do any additional setup after loading the view.
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
     }
-    
-    
+ 
+
 }
 
-extension ViewController: UITableViewDelegate, UITableViewDataSource {
+extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return items.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = data[indexPath.row].title
+        cell.textLabel?.text = items[indexPath.row]
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let items = data[indexPath.row].items
-        let vc = ListViewController(items: items)
-        navigationController?.pushViewController(vc, animated: true)
-        
     }
     
     
 }
-
